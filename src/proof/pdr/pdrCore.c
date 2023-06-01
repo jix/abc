@@ -65,6 +65,7 @@ void Pdr_ManSetDefaultParams( Pdr_Par_t * pPars )
     pPars->fFlopPrio      =       0;  // use structural flop priorities
     pPars->fFlopOrder     =       0;  // order flops for 'analyze_final' during generalization
     pPars->fDumpInv       =       0;  // dump inductive invariant
+    pPars->fInvToConstr   =       0;  // add inductive invariant as new constraints
     pPars->fUseSupp       =       1;  // using support variables in the invariant
     pPars->fShortest      =       0;  // forces bug traces to be shortest
     pPars->fUsePropOut    =       1;  // use property output
@@ -80,6 +81,7 @@ void Pdr_ManSetDefaultParams( Pdr_Par_t * pPars )
     pPars->nDropOuts      =       0;  // the number of timed out outputs
     pPars->timeLastSolved =       0;  // last one solved
     pPars->pInvFileName   =    NULL;  // invariant file name
+    pPars->pNtk           =    NULL;
 }
 
 /**Function*************************************************************
@@ -1423,12 +1425,20 @@ int Pdr_ManSolve( Aig_Man_t * pAig, Pdr_Par_t * pPars )
         p->pAig->vSeqModelVec = p->vCexes;
         p->vCexes = NULL;
     }
-    if ( p->pPars->fDumpInv )
+    if ( p->pPars->fDumpInv || p->pPars->fInvToConstr )
     {
-        char * pFileName = pPars->pInvFileName ? pPars->pInvFileName : Extra_FileNameGenericAppend(p->pAig->pName, "_inv.pla");
         Abc_FrameSetInv( Pdr_ManDeriveInfinityClauses( p, RetValue!=1 ) );
-        Pdr_ManDumpClauses( p, pFileName, RetValue==1 );
-        printf( "Dumped inductive invariant in file \"%s\".\n", pFileName );
+        if ( p->pPars->fDumpInv )
+        {
+            char * pFileName = pPars->pInvFileName ? pPars->pInvFileName : Extra_FileNameGenericAppend(p->pAig->pName, "_inv.pla");
+            Pdr_ManDumpClauses( p, pFileName, RetValue==1 );
+            printf( "Dumped inductive invariant in file \"%s\".\n", pFileName );
+        }
+        if ( p->pPars->fInvToConstr )
+        {
+            Pdr_ManInvToConstr( p );
+            printf( "Added inductive invariant as new constraints.\n" );
+        }
     }
     else if ( RetValue == 1 )
         Abc_FrameSetInv( Pdr_ManDeriveInfinityClauses( p, RetValue!=1 ) );

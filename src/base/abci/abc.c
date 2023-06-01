@@ -28915,7 +28915,7 @@ int Abc_CommandPdr( Abc_Frame_t * pAbc, int argc, char ** argv )
     int c;
     Pdr_ManSetDefaultParams( pPars );
     Extra_UtilGetoptReset();
-    while ( ( c = Extra_UtilGetopt( argc, argv, "MFCDQTHGSLIaxrmuyfqipdegjonctkvwzh" ) ) != EOF )
+    while ( ( c = Extra_UtilGetopt( argc, argv, "MFCDQTHGSLIaxrmuyfqipdbegjonctkvwzh" ) ) != EOF )
     {
         switch ( c )
         {
@@ -29069,6 +29069,9 @@ int Abc_CommandPdr( Abc_Frame_t * pAbc, int argc, char ** argv )
         case 'd':
             pPars->fDumpInv ^= 1;
             break;
+        case 'b':
+            pPars->fInvToConstr ^= 1;
+            break;
         case 'e':
             pPars->fUseSupp ^= 1;
             break;
@@ -29169,6 +29172,7 @@ usage:
     Abc_Print( -2, "\t-i     : toggle clause pushing from an intermediate timeframe [default = %s]\n",       pPars->fShiftStart? "yes": "no" );
     Abc_Print( -2, "\t-p     : toggle reusing proof-obligations in the last timeframe [default = %s]\n",     pPars->fReuseProofOblig? "yes": "no" );
     Abc_Print( -2, "\t-d     : toggle dumping invariant (valid if init state is all-0) [default = %s]\n",    pPars->fDumpInv? "yes": "no" );
+    Abc_Print( -2, "\t-b     : toggle adding invariant as constraints [default = %s]\n",                     pPars->fInvToConstr? "yes": "no" );
     Abc_Print( -2, "\t-e     : toggle using only support variables in the invariant [default = %s]\n",       pPars->fUseSupp? "yes": "no" );
     Abc_Print( -2, "\t-g     : toggle skipping expensive generalization step [default = %s]\n",              pPars->fSkipGeneral? "yes": "no" );
     Abc_Print( -2, "\t-j     : toggle using simplified generalization step [default = %s]\n",                pPars->fSimpleGeneral? "yes": "no" );

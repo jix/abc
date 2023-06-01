@@ -207,6 +207,7 @@ extern Vec_Int_t *     Pdr_ManCountFlopsInv( Pdr_Man_t * p );
 extern void            Pdr_ManPrintProgress( Pdr_Man_t * p, int fClose, abctime Time );
 extern void            Pdr_ManPrintClauses( Pdr_Man_t * p, int kStart );
 extern void            Pdr_ManDumpClauses( Pdr_Man_t * p, char * pFileName, int fProved );
+extern void            Pdr_ManInvToConstr( Pdr_Man_t * p );
 extern Vec_Str_t *     Pdr_ManDumpString( Pdr_Man_t * p );
 extern void            Pdr_ManReportInvariant( Pdr_Man_t * p );
 extern void            Pdr_ManVerifyInvariant( Pdr_Man_t * p );

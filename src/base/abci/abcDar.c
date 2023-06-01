@@ -3081,6 +3081,7 @@ int Abc_NtkDarPdr( Abc_Ntk_t * pNtk, Pdr_Par_t * pPars )
         Abc_Print( 1, "Converting network into AIG has failed.\n" );
         return -1;
     }
+    pPars->pNtk = pNtk;
     RetValue = Pdr_ManSolve( pMan, pPars );
     pPars->nDropOuts = Saig_ManPoNum(pMan) - pPars->nProveOuts - pPars->nFailOuts;
     if ( !pPars->fSilent )

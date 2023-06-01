@@ -623,6 +623,50 @@ Vec_Int_t * Pdr_ManDeriveInfinityClauses( Pdr_Man_t * p, int fReduce )
     return vResult;
 }
 
+/**Function*************************************************************
+
+  Synopsis    []
+
+  Description []
+
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+void Pdr_ManInvToConstr( Pdr_Man_t * p )
+{
+    Abc_Ntk_t * pNtk = p->pPars->pNtk;
+    Vec_Ptr_t * vCubes = p->vInfCubes;
+    Pdr_Set_t * pCube;
+    Abc_Obj_t * pNode, * pAigCube;
+    int i, v, nPi, nPo;
+
+    nPi = Abc_NtkPiNum( pNtk );
+    nPo = Abc_NtkPoNum( pNtk );
+
+    Vec_PtrForEachEntry( Pdr_Set_t *, vCubes, pCube, i )
+    {
+        if ( pCube->nRefs == -1 ) // skip non-inductive
+            continue;
+
+        pAigCube = Abc_AigConst1(pNtk);
+
+        pNtk->nConstrs++;
+
+        for ( v = 0; v < pCube->nLits; v++ )
+            pAigCube = Abc_AigAnd( (Abc_Aig_t *)pNtk->pManFunc, pAigCube, Abc_ObjNotCond(Abc_NtkCi(pNtk, nPi + Abc_Lit2Var(pCube->Lits[v])), Abc_LitIsCompl(pCube->Lits[v])));
+
+        pNode = Abc_NtkCreatePo( pNtk );
+        Abc_ObjAddFanin( pNode, pAigCube );
+    }
+    Abc_NtkOrderCisCos( pNtk );
+    // make sure that everything is okay
+    if ( !Abc_NtkCheck( pNtk ) )
+    {
+        printf( "Pdr_ManInvToConstr: The network check has failed.\n" );
+    }
+}
 
 
 /**Function*************************************************************

@@ -21,6 +21,7 @@
 #ifndef ABC__sat__pdr__pdr_h
 #define ABC__sat__pdr__pdr_h
 
+#include "base/abc/abc.h"
 
 ABC_NAMESPACE_HEADER_START
 
@@ -56,6 +57,7 @@ struct Pdr_Par_t_
     int fFlopPrio;        // use structural flop priorities
     int fFlopOrder;       // order flops for 'analyze_final' during generalization
     int fDumpInv;         // dump inductive invariant
+    int fInvToConstr;     // add inductive invariant as new constraints
     int fUseSupp;         // use support in the invariant
     int fShortest;        // forces bug traces to be shortest
     int fShiftStart;      // allows clause pushing to start from an intermediate frame
@@ -84,6 +86,7 @@ struct Pdr_Par_t_
     abctime timeLastSolved; // the time when the last output was solved
     Vec_Int_t * vOutMap;  // in the multi-output mode, contains status for each PO (0 = sat; 1 = unsat; negative = undecided)
     char * pInvFileName;  // invariable file name
+    Abc_Ntk_t * pNtk;     // used for adding new constraints to the network
 };
 
 ////////////////////////////////////////////////////////////////////////
